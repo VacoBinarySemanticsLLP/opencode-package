@@ -1,0 +1,89 @@
+{
+    "mcpServers": {
+        "context7": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@upstash/context7-mcp",
+                "--api-key",
+                "YOUR_API_KEY"
+            ]
+        },
+        "shadcn": {
+            "command": "npx",
+            "args": [
+                "shadcn@latest",
+                "mcp"
+            ]
+        },
+        "filesystem": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-filesystem",
+                "/Users/prasenjitjana/Desktop/agent_skills"
+            ]
+        },
+        "git": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-git"
+            ]
+        },
+        "sequential-thinking": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@anthropic/sequential-thinking-server"
+            ]
+        }
+    },
+    "agentConfig": {
+        "qwen": {
+            "rulesFile": "rules/QWEN.md",
+            "model": "qwen-3.5-sonnet",
+            "capabilities": [
+                "large-context",
+                "multi-language",
+                "code-generation",
+                "reasoning"
+            ]
+        },
+        "claude": {
+            "rulesFile": "rules/CLAUDE.md",
+            "model": "claude-3-7-sonnet",
+            "capabilities": [
+                "200k-context",
+                "reasoning",
+                "code-generation",
+                "vision"
+            ]
+        },
+        "gemini": {
+            "rulesFile": "rules/GEMINI.md",
+            "model": "gemini-2.0-flash",
+            "capabilities": [
+                "multimodal",
+                "code-generation",
+                "google-ecosystem"
+            ]
+        },
+        "opencode": {
+            "rulesFile": "rules/OPENCODE.md",
+            "model": "auto",
+            "capabilities": [
+                "model-agnostic",
+                "local-first",
+                "open-source",
+                "extensible"
+            ]
+        }
+    },
+    "setup": {
+        "qwen": "~/.qwen/antigravity/mcp_config.json",
+        "claude": "~/.claude/antigravity/mcp_config.json",
+        "gemini": "~/.gemini/antigravity/mcp_config.json",
+        "opencode": "~/.opencode/antigravity/mcp_config.json"
+    }
+}
