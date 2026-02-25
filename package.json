@@ -2,17 +2,6 @@
   "name": "opencode-agent-config",
   "version": "1.0.0",
   "description": "Unified agent configurations for Qwen Code AND Opencode - includes agents, skills, rules, and workflows",
-  "bin": {
-    "install-opencode-agents": "./scripts/install-unified.sh"
-  },
-  "scripts": {
-    "install": "bash scripts/install-unified.sh",
-    "postinstall": "bash scripts/install-unified.sh"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/opencode-agent-config.git"
-  },
   "keywords": [
     "opencode",
     "qwen",
@@ -22,8 +11,21 @@
     "configuration",
     "skills"
   ],
-  "author": "Your Name",
+  "homepage": "https://github.com/yourusername/opencode-agent-config#readme",
+  "bugs": {
+    "url": "https://github.com/yourusername/opencode-agent-config/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/opencode-agent-config.git"
+  },
   "license": "MIT",
+  "author": "Your Name",
+  "type": "commonjs",
+  "main": "index.js",
+  "bin": {
+    "install-opencode-agents": "scripts/install-unified.sh"
+  },
   "files": [
     "scripts/**",
     "agents/**",
@@ -31,5 +33,9 @@
     "rules/**",
     "workflows/**",
     "mcp_config.json"
-  ]
+  ],
+  "scripts": {
+    "install": "bash scripts/install-unified.sh",
+    "postinstall": "bash scripts/install-unified.sh"
+  }
 }

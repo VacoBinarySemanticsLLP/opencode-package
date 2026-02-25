@@ -16,7 +16,7 @@ curl -fsSL https://raw.githubusercontent.com/yourusername/opencode-agent-config/
 ### Using npm
 
 ```bash
-npm install -g opencode-agent-config
+npm install -g opencode-agent-config@1.0.0
 ```
 
 ### Using bun
