@@ -87,32 +87,32 @@ mkdir -p "$AGENT_LINK_DIR"/{agents,skills,rules,workflows,scripts,.shared}
 
 log_success "Directories created"
 
-# Copy files from package
+# Copy files from package (skip symlinks to avoid recursive links)
 echo ""
 log_info "Copying agent configurations..."
 
 if [ -d "$PACKAGE_DIR/agents" ] && [ "$(ls -A $PACKAGE_DIR/agents 2>/dev/null)" ]; then
-    cp -r "$PACKAGE_DIR/agents/"* "$AGENT_LINK_DIR/agents/"
-    log_success "Agents copied: $(ls -1 $AGENT_LINK_DIR/agents/*.md | wc -l | xargs) files"
+    find "$PACKAGE_DIR/agents" -maxdepth 1 -type f -exec cp {} "$AGENT_LINK_DIR/agents/" \;
+    log_success "Agents copied: $(ls -1 $AGENT_LINK_DIR/agents/*.md 2>/dev/null | wc -l | xargs) files"
 fi
 
 if [ -d "$PACKAGE_DIR/skills" ] && [ "$(ls -A $PACKAGE_DIR/skills 2>/dev/null)" ]; then
-    cp -r "$PACKAGE_DIR/skills/"* "$AGENT_LINK_DIR/skills/"
+    find "$PACKAGE_DIR/skills" -maxdepth 1 -type d -mindepth 1 -exec cp -r {} "$AGENT_LINK_DIR/skills/" \;
     log_success "Skills copied: $(ls -1d $AGENT_LINK_DIR/skills/*/ 2>/dev/null | wc -l | xargs) directories"
 fi
 
 if [ -d "$PACKAGE_DIR/rules" ] && [ "$(ls -A $PACKAGE_DIR/rules 2>/dev/null)" ]; then
-    cp -r "$PACKAGE_DIR/rules/"* "$AGENT_LINK_DIR/rules/"
+    find "$PACKAGE_DIR/rules" -maxdepth 1 -type f -exec cp {} "$AGENT_LINK_DIR/rules/" \;
     log_success "Rules copied"
 fi
 
 if [ -d "$PACKAGE_DIR/workflows" ] && [ "$(ls -A $PACKAGE_DIR/workflows 2>/dev/null)" ]; then
-    cp -r "$PACKAGE_DIR/workflows/"* "$AGENT_LINK_DIR/workflows/"
+    find "$PACKAGE_DIR/workflows" -maxdepth 1 -type f -exec cp {} "$AGENT_LINK_DIR/workflows/" \;
     log_success "Workflows copied"
 fi
 
 if [ -d "$PACKAGE_DIR/.shared" ] && [ "$(ls -A $PACKAGE_DIR/.shared 2>/dev/null)" ]; then
-    cp -r "$PACKAGE_DIR/.shared/"* "$AGENT_LINK_DIR/.shared/"
+    find "$PACKAGE_DIR/.shared" -maxdepth 1 -mindepth 1 -exec cp -r {} "$AGENT_LINK_DIR/.shared/" \;
     log_success "Shared files copied"
 fi
 
@@ -127,11 +127,21 @@ fi
 echo ""
 log_qwen "Setting up Qwen Code..."
 
+# Remove existing symlinks first to avoid conflicts
+rm -f "$QWEN_DIR/agents" "$QWEN_DIR/skills" "$QWEN_DIR/rules" "$QWEN_DIR/workflows" 2>/dev/null || true
+
 # Symlink agents
 for agent_file in "$AGENT_LINK_DIR/agents/"*.md; do
     if [ -f "$agent_file" ]; then
         filename=$(basename "$agent_file")
-        ln -sf "$agent_file" "$QWEN_DIR/agents/$filename"
+        target="$QWEN_DIR/agents/$filename"
+        
+        # Skip if already a valid symlink pointing to the same file
+        if [ -L "$target" ] && [ "$(readlink "$target")" = "$agent_file" ]; then
+            continue
+        fi
+        
+        ln -sf "$agent_file" "$target"
     fi
 done
 
@@ -155,11 +165,21 @@ log_success "Qwen Code symlinks created"
 # Create symlinks for Opencode
 log_opencode "Setting up Opencode..."
 
+# Remove existing symlinks first to avoid conflicts
+rm -f "$OPENCODE_DIR/agents" "$OPENCODE_DIR/skills" "$OPENCODE_DIR/rules" "$OPENCODE_DIR/workflows" 2>/dev/null || true
+
 # Symlink agents
 for agent_file in "$AGENT_LINK_DIR/agents/"*.md; do
     if [ -f "$agent_file" ]; then
         filename=$(basename "$agent_file")
-        ln -sf "$agent_file" "$OPENCODE_DIR/agents/$filename"
+        target="$OPENCODE_DIR/agents/$filename"
+        
+        # Skip if already a valid symlink pointing to the same file
+        if [ -L "$target" ] && [ "$(readlink "$target")" = "$agent_file" ]; then
+            continue
+        fi
+        
+        ln -sf "$agent_file" "$target"
     fi
 done
 
