@@ -1,6 +1,6 @@
 {
   "name": "opencode-agent-config",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Unified agent configurations for Qwen Code AND Opencode - includes agents, skills, rules, and workflows",
   "keywords": [
     "opencode",
@@ -11,16 +11,16 @@
     "configuration",
     "skills"
   ],
-  "homepage": "https://github.com/yourusername/opencode-agent-config#readme",
+  "homepage": "https://github.com/VacoBinarySemanticsLLP/opencode-package#readme",
   "bugs": {
-    "url": "https://github.com/yourusername/opencode-agent-config/issues"
+    "url": "https://github.com/VacoBinarySemanticsLLP/opencode-package/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/opencode-agent-config.git"
+    "url": "git+https://github.com/VacoBinarySemanticsLLP/opencode-package.git"
   },
   "license": "MIT",
-  "author": "Your Name",
+  "author": "Highspring India LLP",
   "type": "commonjs",
   "main": "index.js",
   "bin": {
