@@ -126,22 +126,58 @@ fi
 # Create symlinks for Qwen
 echo ""
 log_qwen "Setting up Qwen Code..."
+
+# Symlink agents
 for agent_file in "$AGENT_LINK_DIR/agents/"*.md; do
     if [ -f "$agent_file" ]; then
         filename=$(basename "$agent_file")
         ln -sf "$agent_file" "$QWEN_DIR/agents/$filename"
     fi
 done
+
+# Symlink skills directory
+if [ -d "$AGENT_LINK_DIR/skills" ]; then
+    ln -sf "$AGENT_LINK_DIR/skills" "$QWEN_DIR/skills"
+fi
+
+# Symlink rules directory
+if [ -d "$AGENT_LINK_DIR/rules" ]; then
+    ln -sf "$AGENT_LINK_DIR/rules" "$QWEN_DIR/rules"
+fi
+
+# Symlink workflows directory
+if [ -d "$AGENT_LINK_DIR/workflows" ]; then
+    ln -sf "$AGENT_LINK_DIR/workflows" "$QWEN_DIR/workflows"
+fi
+
 log_success "Qwen Code symlinks created"
 
 # Create symlinks for Opencode
 log_opencode "Setting up Opencode..."
+
+# Symlink agents
 for agent_file in "$AGENT_LINK_DIR/agents/"*.md; do
     if [ -f "$agent_file" ]; then
         filename=$(basename "$agent_file")
         ln -sf "$agent_file" "$OPENCODE_DIR/agents/$filename"
     fi
 done
+
+# Symlink skills directory
+if [ -d "$AGENT_LINK_DIR/skills" ]; then
+    ln -sf "$AGENT_LINK_DIR/skills" "$OPENCODE_DIR/skills"
+fi
+
+# Symlink rules directory
+if [ -d "$AGENT_LINK_DIR/rules" ]; then
+    ln -sf "$AGENT_LINK_DIR/rules" "$OPENCODE_DIR/rules"
+fi
+
+# Symlink workflows directory
+if [ -d "$AGENT_LINK_DIR/workflows" ]; then
+    ln -sf "$AGENT_LINK_DIR/workflows" "$OPENCODE_DIR/workflows"
+fi
+
 log_success "Opencode symlinks created"
 
 # Fix tools format

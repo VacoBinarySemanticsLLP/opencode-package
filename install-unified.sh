@@ -114,15 +114,31 @@ log_success "Files copied"
 # Create symlinks for both Qwen and Opencode
 echo ""
 log_qwen "Setting up Qwen Code..."
+
+# Symlink agents
 for agent_file in "$AGENT_LINK_DIR/agents/"*.md; do
     [ -f "$agent_file" ] && ln -sf "$agent_file" "$QWEN_DIR/agents/$(basename "$agent_file")"
 done
+
+# Symlink skills, rules, workflows directories
+[ -d "$AGENT_LINK_DIR/skills" ] && ln -sf "$AGENT_LINK_DIR/skills" "$QWEN_DIR/skills"
+[ -d "$AGENT_LINK_DIR/rules" ] && ln -sf "$AGENT_LINK_DIR/rules" "$QWEN_DIR/rules"
+[ -d "$AGENT_LINK_DIR/workflows" ] && ln -sf "$AGENT_LINK_DIR/workflows" "$QWEN_DIR/workflows"
+
 log_success "Qwen Code symlinks created"
 
 log_opencode "Setting up Opencode..."
+
+# Symlink agents
 for agent_file in "$AGENT_LINK_DIR/agents/"*.md; do
     [ -f "$agent_file" ] && ln -sf "$agent_file" "$OPENCODE_DIR/agents/$(basename "$agent_file")"
 done
+
+# Symlink skills, rules, workflows directories
+[ -d "$AGENT_LINK_DIR/skills" ] && ln -sf "$AGENT_LINK_DIR/skills" "$OPENCODE_DIR/skills"
+[ -d "$AGENT_LINK_DIR/rules" ] && ln -sf "$AGENT_LINK_DIR/rules" "$OPENCODE_DIR/rules"
+[ -d "$AGENT_LINK_DIR/workflows" ] && ln -sf "$AGENT_LINK_DIR/workflows" "$OPENCODE_DIR/workflows"
+
 log_success "Opencode symlinks created"
 
 # Fix tools format
