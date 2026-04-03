@@ -1,6 +1,6 @@
-# Qwen Code + Opencode Agent Configuration Package
+# Qwen Code + Opencode + Claude Code Agent Configuration Package
 
-Unified agent configurations for **both Qwen Code and opencode**. Install all your custom agents on any machine with a single command.
+Unified agent configurations for **Qwen Code, opencode, and Claude Code**. Install all your custom agents on any machine with a single command.
 
 ## 🚀 Quick Install
 
@@ -22,7 +22,7 @@ bun install -g opencode-agent-config
 curl -fsSL https://raw.githubusercontent.com/VacoBinarySemanticsLLP/opencode-package/main/install-unified.sh | bash
 ```
 
-**This installs for both Qwen Code AND Opencode simultaneously!**
+**This installs for Qwen Code, Opencode, AND Claude Code simultaneously!**
 
 ### Option 3: Git Clone
 
@@ -40,7 +40,7 @@ npm install -g .
 | **Skills** | 37 domain-specific knowledge bases | `~/.agent-link/skills/` |
 | **Rules** | Coding standards & guidelines | `~/.agent-link/rules/` |
 | **Workflows** | Automated workflows | `~/.agent-link/workflows/` |
-| **MCP Config** | Model Context Protocol config | `~/.opencode/mcp_config.json` |
+| **MCP Config** | Model Context Protocol config | `~/.opencode/mcp_config.json`, `~/.claude/mcp_config.json` |
 
 ## 🎯 Available Agents
 
@@ -75,6 +75,7 @@ If you prefer manual setup:
 # Create directories
 mkdir -p ~/.qwen/{agents,skills,rules,bin}
 mkdir -p ~/.opencode/{agents,skills,rules,bin}
+mkdir -p ~/.claude/{agents,skills,rules,bin}
 mkdir -p ~/.agent-link/{agents,skills,rules,workflows}
 
 # Copy files
@@ -94,6 +95,12 @@ ln -s ~/.agent-link/agents/*.md ~/.opencode/agents/
 ln -s ~/.agent-link/skills ~/.opencode/skills
 ln -s ~/.agent-link/rules ~/.opencode/rules
 ln -s ~/.agent-link/workflows ~/.opencode/workflows
+
+# Create symlinks for Claude
+ln -s ~/.agent-link/agents/*.md ~/.claude/agents/
+ln -s ~/.agent-link/skills ~/.claude/skills
+ln -s ~/.agent-link/rules ~/.claude/rules
+ln -s ~/.agent-link/workflows ~/.claude/workflows
 ```
 
 ## 🔄 Updating
@@ -120,6 +127,7 @@ curl -fsSL https://raw.githubusercontent.com/VacoBinarySemanticsLLP/opencode-pac
 rm -rf ~/.agent-link
 rm -rf ~/.qwen
 rm -rf ~/.opencode
+rm -rf ~/.claude
 
 # Uninstall npm package
 npm uninstall -g opencode-agent-config
@@ -129,6 +137,7 @@ npm uninstall -g opencode-agent-config
 
 - **Qwen Code CLI** or **VS Code with Qwen extension**
 - **opencode CLI** (auto-installed if missing)
+- **Claude Code CLI** (`npm install -g @anthropic-ai/claude-code`)
 - **Node.js** 18+ (for npm installation)
 - **bash** 4.0+ (for script installation)
 - **python3** (for tools format fixing)
@@ -140,6 +149,7 @@ npm uninstall -g opencode-agent-config
 The package includes a pre-configured `mcp_config.json`. Customize it at:
 - `~/.opencode/mcp_config.json`
 - `~/.qwen/mcp_config.json`
+- `~/.claude/mcp_config.json`
 - `~/.agent-link/mcp_config.json`
 
 ### Environment Variables
@@ -148,6 +158,7 @@ The package includes a pre-configured `mcp_config.json`. Customize it at:
 |----------|-------------|---------|
 | `QWEN_DIR` | Qwen config directory | `~/.qwen` |
 | `OPENCODE_DIR` | Opencode config directory | `~/.opencode` |
+| `CLAUDE_DIR` | Claude Code config directory | `~/.claude` |
 | `AGENT_LINK_DIR` | Agent link directory | `~/.agent-link` |
 
 ## 📁 Installed Structure
@@ -161,6 +172,13 @@ The package includes a pre-configured `mcp_config.json`. Customize it at:
 └── mcp_config.json   # MCP configuration
 
 ~/.opencode/
+├── agents/           # Symlinks to agent files
+├── skills/           # Symlink to skill definitions
+├── rules/            # Symlink to rule definitions
+├── workflows/        # Symlink to workflows
+└── mcp_config.json   # MCP configuration
+
+~/.claude/
 ├── agents/           # Symlinks to agent files
 ├── skills/           # Symlink to skill definitions
 ├── rules/            # Symlink to rule definitions
@@ -181,9 +199,9 @@ The package includes a pre-configured `mcp_config.json`. Customize it at:
 
 ### Agents not loading
 
-1. Check symlinks: `ls -la ~/.qwen/agents/` and `ls -la ~/.opencode/agents/`
+1. Check symlinks: `ls -la ~/.qwen/agents/` and `ls -la ~/.opencode/agents/` and `ls -la ~/.claude/agents/`
 2. Verify agent files: `ls -la ~/.agent-link/agents/`
-3. Restart Qwen Code or opencode
+3. Restart Qwen Code, opencode, or Claude Code
 
 ### Skills not found
 
@@ -198,6 +216,7 @@ curl -fsSL https://raw.githubusercontent.com/VacoBinarySemanticsLLP/opencode-pac
 chmod -R 755 ~/.agent-link
 chmod -R 755 ~/.qwen
 chmod -R 755 ~/.opencode
+chmod -R 755 ~/.claude
 ```
 
 ### Tools format error
@@ -238,4 +257,4 @@ MIT License - See LICENSE file for details
 
 ---
 
-**Made with ❤️ by Highspring India LLP for the Qwen Code and Opencode community**
+**Made with ❤️ by Highspring India LLP for the Qwen Code, Opencode, and Claude Code community**

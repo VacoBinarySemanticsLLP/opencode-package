@@ -23,17 +23,19 @@ log_warning() { echo -e "${YELLOW}⚠️  $1${NC}"; }
 log_error() { echo -e "${RED}❌ $1${NC}"; }
 log_qwen() { echo -e "${MAGENTA}🤖 $1${NC}"; }
 log_opencode() { echo -e "${CYAN}🔷 $1${NC}"; }
+log_claude() { echo -e "${GREEN}🧠 $1${NC}"; }
 
 # Configuration
 QWEN_DIR="$HOME/.qwen"
 OPENCODE_DIR="$HOME/.opencode"
+CLAUDE_DIR="$HOME/.claude"
 AGENT_LINK_DIR="$HOME/.agent-link"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PACKAGE_DIR="$(dirname "$SCRIPT_DIR")"
 
 echo ""
 echo "================================================================="
-echo "   🤖 Qwen Code + 🔷 Opencode Unified Installer"
+echo "   🤖 Qwen Code + 🔷 Opencode + 🧠 Claude Code Unified Installer"
 echo "================================================================="
 echo ""
 
@@ -59,6 +61,19 @@ else
     log_warning "Qwen Code not detected. Install via VS Code extension if needed."
 fi
 
+# Check for claude
+if command -v claude &> /dev/null || [ -d "$CLAUDE_DIR" ]; then
+    log_claude "Claude Code is available"
+else
+    log_info "Claude Code not detected. Installing..."
+    if command -v npm &> /dev/null; then
+        npm install -g @anthropic-ai/claude-code 2>/dev/null || log_warning "Claude Code npm install failed, continuing..."
+    elif command -v bun &> /dev/null; then
+        bun install -g @anthropic-ai/claude-code 2>/dev/null || log_warning "Claude Code bun install failed, continuing..."
+    fi
+    log_success "Claude Code setup attempted"
+fi
+
 # Backup existing configurations
 echo ""
 log_info "Creating backups..."
@@ -81,6 +96,9 @@ mkdir -p "$QWEN_DIR"/{agents,skills,rules,bin}
 
 # Opencode directories
 mkdir -p "$OPENCODE_DIR"/{agents,skills,rules,bin}
+
+# Claude directories
+mkdir -p "$CLAUDE_DIR"/{agents,skills,rules,bin}
 
 # Agent link (shared source)
 mkdir -p "$AGENT_LINK_DIR"/{agents,skills,rules,workflows,scripts,.shared}
@@ -120,6 +138,7 @@ if [ -f "$PACKAGE_DIR/mcp_config.json" ]; then
     cp "$PACKAGE_DIR/mcp_config.json" "$AGENT_LINK_DIR/"
     cp "$PACKAGE_DIR/mcp_config.json" "$QWEN_DIR/"
     cp "$PACKAGE_DIR/mcp_config.json" "$OPENCODE_DIR/"
+    cp "$PACKAGE_DIR/mcp_config.json" "$CLAUDE_DIR/"
     log_success "MCP config copied"
 fi
 
@@ -200,6 +219,44 @@ fi
 
 log_success "Opencode symlinks created"
 
+# Create symlinks for Claude
+log_claude "Setting up Claude Code..."
+
+# Remove existing symlinks first to avoid conflicts
+rm -f "$CLAUDE_DIR/agents" "$CLAUDE_DIR/skills" "$CLAUDE_DIR/rules" "$CLAUDE_DIR/workflows" 2>/dev/null || true
+
+# Symlink agents
+for agent_file in "$AGENT_LINK_DIR/agents/"*.md; do
+    if [ -f "$agent_file" ]; then
+        filename=$(basename "$agent_file")
+        target="$CLAUDE_DIR/agents/$filename"
+        
+        # Skip if already a valid symlink pointing to the same file
+        if [ -L "$target" ] && [ "$(readlink "$target")" = "$agent_file" ]; then
+            continue
+        fi
+        
+        ln -sf "$agent_file" "$target"
+    fi
+done
+
+# Symlink skills directory
+if [ -d "$AGENT_LINK_DIR/skills" ]; then
+    ln -sf "$AGENT_LINK_DIR/skills" "$CLAUDE_DIR/skills"
+fi
+
+# Symlink rules directory
+if [ -d "$AGENT_LINK_DIR/rules" ]; then
+    ln -sf "$AGENT_LINK_DIR/rules" "$CLAUDE_DIR/rules"
+fi
+
+# Symlink workflows directory
+if [ -d "$AGENT_LINK_DIR/workflows" ]; then
+    ln -sf "$AGENT_LINK_DIR/workflows" "$CLAUDE_DIR/workflows"
+fi
+
+log_success "Claude Code symlinks created"
+
 # Fix tools format
 echo ""
 log_info "Fixing tools format in agent files..."
@@ -232,6 +289,7 @@ log_info "Verifying installation..."
 
 qwen_agents=$(ls -1 "$QWEN_DIR/agents/"*.md 2>/dev/null | wc -l)
 opencode_agents=$(ls -1 "$OPENCODE_DIR/agents/"*.md 2>/dev/null | wc -l)
+claude_agents=$(ls -1 "$CLAUDE_DIR/agents/"*.md 2>/dev/null | wc -l)
 skills_count=$(ls -1d "$AGENT_LINK_DIR/skills/"*/ 2>/dev/null | wc -l)
 
 if [ "$qwen_agents" -gt 0 ]; then
@@ -244,6 +302,12 @@ if [ "$opencode_agents" -gt 0 ]; then
     log_opencode "$opencode_agents agent files for Opencode"
 else
     log_error "Opencode agents not found"
+fi
+
+if [ "$claude_agents" -gt 0 ]; then
+    log_claude "$claude_agents agent files for Claude Code"
+else
+    log_error "Claude Code agents not found"
 fi
 
 if [ "$skills_count" -gt 0 ]; then
@@ -271,6 +335,12 @@ echo "      • Skills:  $OPENCODE_DIR/skills"
 echo "      • Rules:   $OPENCODE_DIR/rules"
 echo "      • Config:  $OPENCODE_DIR/mcp_config.json"
 echo ""
+echo -e "   ${GREEN}🧠 Claude Code:${NC}"
+echo "      • Agents:  $CLAUDE_DIR/agents"
+echo "      • Skills:  $CLAUDE_DIR/skills"
+echo "      • Rules:   $CLAUDE_DIR/rules"
+echo "      • Config:  $CLAUDE_DIR/mcp_config.json"
+echo ""
 echo "   ${BLUE}📦 Shared Source:${NC}"
 echo "      • Location: $AGENT_LINK_DIR"
 echo ""
@@ -278,11 +348,13 @@ echo "🚀 Next steps:"
 echo "   1. Restart your terminal or run: source ~/.zshrc (or ~/.bashrc)"
 echo "   2. For Qwen Code: Open VS Code with Qwen extension"
 echo "   3. For Opencode: Run 'opencode' in your project directory"
+echo "   4. For Claude Code: Run 'claude' in your project directory"
 echo ""
 echo "📦 To uninstall, run:"
 echo "   rm -rf $AGENT_LINK_DIR"
 echo "   rm -rf $QWEN_DIR"
 echo "   rm -rf $OPENCODE_DIR"
+echo "   rm -rf $CLAUDE_DIR"
 echo ""
 echo "================================================================="
 echo ""

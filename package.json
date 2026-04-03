@@ -1,11 +1,13 @@
 {
   "name": "opencode-agent-config",
   "version": "1.1.0",
-  "description": "Unified agent configurations for Qwen Code AND Opencode - includes agents, skills, rules, and workflows",
+  "description": "Unified agent configurations for Qwen Code, Opencode, and Claude Code - includes agents, skills, rules, and workflows",
   "keywords": [
     "opencode",
     "qwen",
     "qwen-code",
+    "claude",
+    "claude-code",
     "agents",
     "ai",
     "configuration",

@@ -126,9 +126,11 @@ When user's prompt is NOT in English:
 
 **Path Awareness:**
 
-- Agents: `.agent/` (Project)
-- Skills: `.agent/skills/` (Project)
-- Runtime Scripts: `.agent/skills/<skill>/scripts/`
+- Agents: `~/.claude/agents/` → symlinks to `~/.agent-link/agents/`
+- Skills: `~/.claude/skills/` → symlink to `~/.agent-link/skills/`
+- Rules: `~/.claude/rules/` → symlink to `~/.agent-link/rules/`
+- Workflows: `~/.claude/workflows/` → symlink to `~/.agent-link/workflows/`
+- Shared Source: `~/.agent-link/` (canonical location)
 
 ### 🧠 Read → Understand → Apply
 
